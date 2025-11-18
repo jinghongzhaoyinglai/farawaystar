@@ -3,159 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>合成大西瓜 - 精准对齐版</title>
+    <title>合成大西瓜</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Arial Rounded MT Bold', 'Microsoft YaHei', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            padding: 20px;
             color: white;
-            overflow: hidden;
-            touch-action: none;
         }
-        
+
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 登录区域样式 */
+        .auth-section {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-section h2 {
             text-align: center;
-            padding: 20px;
-        }
-        
-        header {
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            margin-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 2rem;
             background: linear-gradient(45deg, #ff9a9e, #fad0c4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
-        .score-container {
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #FF416C, #FF4B2B);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 75, 43, 0.4);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 2px solid #667eea;
+        }
+
+        .switch-text {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .switch-link {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+
+        .success {
+            background: rgba(0, 255, 0, 0.2);
+            color: #51cf66;
+            border: 1px solid #51cf66;
+        }
+
+        /* 游戏区域样式 */
+        .game-section {
+            display: none;
+            width: 100%;
+        }
+
+        .game-header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
             background: rgba(255, 255, 255, 0.1);
             padding: 15px;
             border-radius: 15px;
-            backdrop-filter: blur(10px);
         }
-        
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-container {
+            display: flex;
+            gap: 20px;
+        }
+
         .score-box {
-            flex: 1;
+            text-align: center;
         }
-        
+
         .score-label {
             font-size: 0.9rem;
             opacity: 0.8;
-            margin-bottom: 5px;
         }
-        
+
         .score-value {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
         }
-        
+
         .game-area {
             position: relative;
-            width: 100%;
-            height: 70vh;
-            max-height: 600px;
-            background: rgba(0, 0, 0, 0.2);
+            width: 500px;
+            height: 600px;
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 0 auto 20px auto;
             cursor: pointer;
         }
-        
+
         #gameCanvas {
             width: 100%;
             height: 100%;
             display: block;
         }
-        
-        .next-fruit {
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
             margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        .next-fruit-label {
-            font-size: 1rem;
-            margin-bottom: 10px;
-            opacity: 0.8;
-        }
-        
-        .next-fruit-preview {
+
+        .control-btn {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
             width: 60px;
             height: 60px;
-            margin: 0 auto;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        button {
-            flex: 1;
-            padding: 12px 20px;
+            font-size: 24px;
             border: none;
-            border-radius: 50px;
-            background: linear-gradient(45deg, #FF416C, #FF4B2B);
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 75, 43, 0.6);
-        }
-        
-        button:active {
-            transform: translateY(1px);
-        }
-        
-        #restartBtn {
-            background: linear-gradient(45deg, #11998e, #38ef7d);
             box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
         }
-        
-        .instructions {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            font-size: 0.9rem;
-            line-height: 1.5;
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(56, 239, 125, 0.6);
         }
-        
+
+        .leaderboard-btn {
+            background: linear-gradient(45deg, #FF416C, #FF4B2B);
+            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+        }
+
+        .leaderboard-btn:hover {
+            box-shadow: 0 8px 20px rgba(255, 75, 43, 0.6);
+        }
+
+        .logout-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        /* 排行榜弹窗样式 */
+        .leaderboard-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .leaderboard-content {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .leaderboard-content h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffd700;
+            font-size: 1.8rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .leaderboard-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .leaderboard-item:nth-child(1) {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333;
+            font-weight: bold;
+        }
+
+        .leaderboard-item:nth-child(2) {
+            background: linear-gradient(45deg, #c0c0c0, #e0e0e0);
+            color: #333;
+            font-weight: bold;
+        }
+
+        .leaderboard-item:nth-child(3) {
+            background: linear-gradient(45deg, #cd7f32, #e59b4a);
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* 游戏结束弹窗 */
         .game-over {
             position: absolute;
             top: 0;
@@ -170,108 +348,174 @@
             z-index: 10;
             display: none;
         }
-        
+
         .game-over h2 {
             font-size: 2.5rem;
             margin-bottom: 20px;
             color: #FF416C;
         }
-        
+
         .game-over p {
             font-size: 1.5rem;
             margin-bottom: 30px;
         }
-        
-        .position-indicator {
-            position: absolute;
-            top: 0;
-            width: 2px;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.5);
-            pointer-events: none;
-            z-index: 5;
+
+        .hidden {
+            display: none;
         }
-        
-        .drop-line {
-            position: absolute;
-            top: 0;
+
+        .next-fruit {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .next-fruit-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .next-fruit-preview {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* 游戏内容居中容器 */
+        .game-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.3);
-            pointer-events: none;
-            z-index: 4;
-        }
-        
-        .fruit-preview {
-            position: absolute;
-            pointer-events: none;
-            z-index: 3;
-            opacity: 0.7;
-        }
-        
-        @media (max-width: 500px) {
-            .container {
-                padding: 10px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .score-value {
-                font-size: 1.5rem;
-            }
-            
-            .game-area {
-                height: 60vh;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>合成大西瓜</h1>
-            <p>移动鼠标或手指选择放置位置 - 精准对齐版</p>
-        </header>
-        
-        <div class="score-container">
-            <div class="score-box">
-                <div class="score-label">当前分数</div>
-                <div class="score-value" id="currentScore">0</div>
+        <!-- 登录注册区域 -->
+        <div class="auth-section" id="authSection">
+            <!-- 登录表单 -->
+            <div id="loginSection">
+                <h2>用户登录</h2>
+                <div id="loginMessage" class="message"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">用户名:</label>
+                        <input type="text" id="username" name="username" required 
+                               placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码:</label>
+                        <input type="password" id="password" name="password" required 
+                               placeholder="请输入密码">
+                    </div>
+                    <button type="submit">登录</button>
+                </form>
+                
+                <div class="switch-text">
+                    还没有账号？ <span class="switch-link" onclick="showRegister()">立即注册</span>
+                </div>
             </div>
-            <div class="score-box">
-                <div class="score-label">最高分数</div>
-                <div class="score-value" id="highScore">0</div>
+
+            <!-- 注册表单 -->
+            <div id="registerSection" class="hidden">
+                <h2>用户注册</h2>
+                <div id="registerMessage" class="message"></div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regUsername">用户名:</label>
+                        <input type="text" id="regUsername" name="username" required 
+                               placeholder="3-20个字符">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">密码:</label>
+                        <input type="password" id="regPassword" name="password" required 
+                               placeholder="至少6个字符">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">确认密码:</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required 
+                               placeholder="再次输入密码">
+                    </div>
+                    <button type="submit">注册</button>
+                </form>
+                
+                <button type="button" class="secondary-btn" onclick="showLogin()">返回登录</button>
             </div>
         </div>
-        
-        <div class="game-area" id="gameArea">
-            <div class="position-indicator" id="positionIndicator"></div>
-            <div class="drop-line" id="dropLine"></div>
-            <canvas id="gameCanvas"></canvas>
-            
-            <div class="game-over" id="gameOver">
-                <h2>游戏结束!</h2>
-                <p>得分: <span id="finalScore">0</span></p>
-                <button onclick="restartGame()">再玩一次</button>
+
+        <!-- 游戏区域 -->
+        <div class="game-section" id="gameSection">
+            <div class="game-content">
+                <div class="game-header">
+                    <div class="header-left">
+                        <button class="logout-btn" onclick="handleLogout()">退出登录</button>
+                        <h3>欢迎, <span id="welcomeUser">用户</span>!</h3>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-box">
+                            <div class="score-label">当前分数</div>
+                            <div class="score-value" id="currentScore">0</div>
+                        </div>
+                        <div class="score-box">
+                            <div class="score-label">最高分数</div>
+                            <div class="score-value" id="highScore">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-fruit">
+                    <div class="next-fruit-label">下一个水果</div>
+                    <div class="next-fruit-preview" id="nextFruitPreview"></div>
+                </div>
+
+                <div class="game-area" id="gameArea">
+                    <canvas id="gameCanvas"></canvas>
+                    
+                    <div class="game-over" id="gameOver">
+                        <h2>游戏结束!</h2>
+                        <p>得分: <span id="finalScore">0</span></p>
+                        <button onclick="restartGame()">再玩一次</button>
+                    </div>
+                </div>
+
+                <!-- 图标按钮 -->
+                <div class="game-controls">
+                    <button class="control-btn" onclick="restartGame()" title="重新开始">🔄</button>
+                    <button class="control-btn leaderboard-btn" onclick="showLeaderboard()" title="排行榜">🏆</button>
+                </div>
+
+                <!-- 排行榜弹窗 -->
+                <div class="leaderboard-modal" id="leaderboardModal">
+                    <div class="leaderboard-content">
+                        <button class="close-btn" onclick="hideLeaderboard()">×</button>
+                        <h3>🏆 排行榜</h3>
+                        <div class="leaderboard-list" id="leaderboardList">
+                            <div class="leaderboard-item">
+                                <span>加载中...</span>
+                                <span>-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <div class="next-fruit">
-            <div class="next-fruit-label">下一个水果</div>
-            <div class="next-fruit-preview" id="nextFruitPreview"></div>
-        </div>
-        
-        <div class="controls">
-            <button id="dropBtn">放置水果 (空格键)</button>
-            <button id="restartBtn">重新开始</button>
-        </div>
-        
-        <div class="instructions">
-            <p>🎮 操作说明: 移动鼠标选择位置，点击或按空格键放置水果</p>
-            <p>🎯 游戏目标: 将相同的水果合成更大的水果，最终合成大西瓜!</p>
-            <p>💡 技巧: 鼠标位置就是水果掉落位置，精准控制!</p>
         </div>
     </div>
 
@@ -282,91 +526,314 @@
             canvasHeight: 600,
             gravity: 0.5,
             friction: 0.9,
-            restitution: 0.7,
+            restitution: 0.2,
             fruitTypes: [
                 { name: '葡萄', radius: 20, color: '#8B008B', score: 1, emoji: '🍇' },
-                { name: '樱桃', radius: 25, color: '#DC143C', score: 2, emoji: '🍒' },
-                { name: '草莓', radius: 30, color: '#FF4500', score: 3, emoji: '🍓' },
-                { name: '橘子', radius: 35, color: '#FF8C00', score: 4, emoji: '🍊' },
-                { name: '苹果', radius: 40, color: '#FF0000', score: 5, emoji: '🍎' },
-                { name: '梨', radius: 45, color: '#DAA520', score: 6, emoji: '🍐' },
-                { name: '桃子', radius: 50, color: '#FFD700', score: 7, emoji: '🍑' },
-                { name: '菠萝', radius: 55, color: '#FFD700', score: 8, emoji: '🍍' },
-                { name: '哈密瓜', radius: 60, color: '#98FB98', score: 9, emoji: '🍈' },
-                { name: '西瓜', radius: 70, color: '#228B22', score: 10, emoji: '🍉' }
+                { name: '樱桃', radius: 28, color: '#DC143C', score: 2, emoji: '🍒' },
+                { name: '草莓', radius: 38, color: '#FF4500', score: 3, emoji: '🍓' },
+                { name: '橘子', radius: 46, color: '#FF8C00', score: 4, emoji: '🍊' },
+                { name: '苹果', radius: 56, color: '#FF0000', score: 5, emoji: '🍎' },
+                { name: '梨', radius: 64, color: '#DAA520', score: 6, emoji: '🍐' },
+                { name: '桃子', radius: 74, color: '#FFD700', score: 7, emoji: '🍑' },
+                { name: '菠萝', radius: 82, color: '#FFD700', score: 8, emoji: '🍍' },
+                { name: '哈密瓜', radius: 90, color: '#98FB98', score: 9, emoji: '🍈' },
+                { name: '西瓜', radius: 98, color: '#228B22', score: 10, emoji: '🍉' }
             ]
         };
 
         // 游戏状态
         let gameState = {
             score: 0,
-            highScore: localStorage.getItem('bigWatermelonHighScore') || 0,
+            highScore: 0,
             fruits: [],
             currentFruit: null,
             nextFruitType: 0,
             isGameOver: false,
             isDropping: false,
-            currentPosition: 250, // 默认在中间
+            currentPosition: 250,
+            sessionId: null,
+            username: null,
             canvasScale: 1
         };
 
         // DOM元素
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const authSection = document.getElementById('authSection');
+        const gameSection = document.getElementById('gameSection');
+        const loginSection = document.getElementById('loginSection');
+        const registerSection = document.getElementById('registerSection');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginMessage = document.getElementById('loginMessage');
+        const registerMessage = document.getElementById('registerMessage');
         const currentScoreEl = document.getElementById('currentScore');
         const highScoreEl = document.getElementById('highScore');
-        const nextFruitPreviewEl = document.getElementById('nextFruitPreview');
+        const welcomeUserEl = document.getElementById('welcomeUser');
         const gameOverEl = document.getElementById('gameOver');
         const finalScoreEl = document.getElementById('finalScore');
-        const dropBtn = document.getElementById('dropBtn');
-        const restartBtn = document.getElementById('restartBtn');
+        const leaderboardList = document.getElementById('leaderboardList');
         const gameArea = document.getElementById('gameArea');
-        const positionIndicator = document.getElementById('positionIndicator');
-        const dropLine = document.getElementById('dropLine');
+        const nextFruitPreviewEl = document.getElementById('nextFruitPreview');
+        const leaderboardModal = document.getElementById('leaderboardModal');
+
+        // API基础URL
+        const apiBase = 'http://localhost:8080/api';
 
         // 计算Canvas缩放比例
         function calculateCanvasScale() {
             const rect = gameArea.getBoundingClientRect();
             gameState.canvasScale = canvas.width / rect.width;
         }
+        // 登录应用类
+        class LoginApp {
+            constructor() {
+                this.sessionId = localStorage.getItem('sessionId');
+                this.initializeElements();
+                this.checkAuthentication();
+                this.attachEventListeners();
+            }
 
+            initializeElements() {
+                // 已经在全局定义
+            }
+
+            attachEventListeners() {
+                loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                registerForm.addEventListener('submit', (e) => this.handleRegister(e));
+            }
+
+            async checkAuthentication() {
+                if (!this.sessionId) {
+                    this.showAuth();
+                    return;
+                }
+
+                try {
+                    const response = await this.apiCall('/checkAuth', {
+                        sessionId: this.sessionId
+                    });
+
+                    if (response.authenticated === 'true') {
+                        gameState.sessionId = this.sessionId;
+                        gameState.username = response.username;
+                        gameState.highScore = parseInt(response.highScore) || 0;
+                        this.showGame();
+                        loadLeaderboard();
+                    } else {
+                        this.showAuth();
+                    }
+                } catch (error) {
+                    console.error('认证检查失败:', error);
+                    this.showAuth();
+                }
+            }
+
+            async handleLogin(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(loginForm);
+                const username = formData.get('username');
+                const password = formData.get('password');
+
+                this.showMessage(loginMessage, '', 'hidden');
+
+                try {
+                    const response = await this.apiCall('/login', {
+                        username: username,
+                        password: password
+                    });
+
+                    if (response.success === 'true') {
+                        this.sessionId = response.sessionId;
+                        gameState.sessionId = response.sessionId;
+                        gameState.username = response.username;
+                        gameState.highScore = parseInt(response.highScore) || 0;
+                        localStorage.setItem('sessionId', this.sessionId);
+                        this.showGame();
+                        loadLeaderboard();
+                        
+                        // 加载用户游戏状态
+                        loadUserGameState(response);
+                    } else {
+                        this.showMessage(loginMessage, response.error || '登录失败', 'error');
+                    }
+                } catch (error) {
+                    this.showMessage(loginMessage, '网络错误，请检查服务器是否启动', 'error');
+                }
+            }
+
+            async handleRegister(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(registerForm);
+                const username = formData.get('username');
+                const password = formData.get('password');
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                this.showMessage(registerMessage, '', 'hidden');
+
+                try {
+                    const response = await this.apiCall('/register', {
+                        username: username,
+                        password: password,
+                        confirmPassword: confirmPassword
+                    });
+
+                    if (response.success === 'true') {
+                        this.showMessage(registerMessage, response.message || '注册成功!', 'success');
+                        registerForm.reset();
+                        setTimeout(() => {
+                            this.showLogin();
+                        }, 2000);
+                    } else {
+                        this.showMessage(registerMessage, response.error || '注册失败', 'error');
+                    }
+                } catch (error) {
+                    this.showMessage(registerMessage, '网络错误，请检查服务器是否启动', 'error');
+                }
+            }
+
+            async handleLogout() {
+                try {
+                    // 退出前保存游戏状态
+                   await saveGameState();
+                    
+                    await this.apiCall('/logout', {
+                        sessionId: gameState.sessionId,
+                        currentScore: gameState.score,
+                        nextFruitType: gameState.nextFruitType,
+                        isGameOver: gameState.isGameOver,
+                        fruits: gameState.fruits.map(f => 
+                            `${f.type}#${f.x}#${f.y}#${f.vx}#${f.vy}#${f.radius}#${f.isDropped}`
+                        ).join(';')
+                    });
+                } catch (error) {
+                    console.error('退出登录失败:', error);
+                } finally {
+                    this.sessionId = null;
+                    gameState.sessionId = null;
+                    gameState.username = null;
+                    localStorage.removeItem('sessionId');
+                    this.showAuth();
+                }
+            }
+
+            async apiCall(endpoint, data) {
+                const response = await fetch(`${apiBase}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.json();
+            }
+
+            showAuth() {
+                authSection.style.display = 'block';
+                gameSection.style.display = 'none';
+                this.showLogin();
+            }
+
+            showGame() {
+                authSection.style.display = 'none';
+                gameSection.style.display = 'block';
+                welcomeUserEl.textContent = gameState.username;
+                highScoreEl.textContent = gameState.highScore;
+            }
+
+            showLogin() {
+                loginSection.style.display = 'block';
+                registerSection.style.display = 'none';
+                loginForm.reset();
+            }
+
+            showRegister() {
+                loginSection.style.display = 'none';
+                registerSection.style.display = 'block';
+                registerForm.reset();
+                this.showMessage(registerMessage, '', 'hidden');
+            }
+
+            showMessage(element, message, type) {
+                element.textContent = message;
+                element.className = `message ${type}`;
+                element.style.display = 'block';
+                
+                if (type === 'success') {
+                    setTimeout(() => {
+                        element.style.display = 'none';
+                    }, 5000);
+                }
+            }
+        }
+
+        // 加载用户游戏状态
+        function loadUserGameState(loginResponse) {
+            gameState.score = parseInt(loginResponse.currentScore) || 0;
+            gameState.nextFruitType = parseInt(loginResponse.nextFruitType) || 0;
+            gameState.isGameOver = loginResponse.isGameOver === 'true';
+            
+            // 加载水果状态
+            gameState.fruits = [];
+            if (loginResponse.fruits && loginResponse.fruits !== '') {
+                const fruitArray = loginResponse.fruits.split(';');
+                for (let fruitStr of fruitArray) {
+                    const parts = fruitStr.split('#');
+                    if (parts.length === 7) {
+                        gameState.fruits.push({
+                            type: parseInt(parts[0]),
+                            x: parseFloat(parts[1]),
+                            y: parseFloat(parts[2]),
+                            vx: parseFloat(parts[3]),
+                            vy: parseFloat(parts[4]),
+                            radius: parseFloat(parts[5]),
+                            isDropped: parts[6] === 'true'
+                        });
+                    }
+                }
+            }
+            
+            updateScore();
+            updateNextFruitPreview();
+            
+            if (!gameState.isGameOver) {
+                requestAnimationFrame(gameLoop);
+            } else {
+                gameOverEl.style.display = 'flex';
+                finalScoreEl.textContent = gameState.score;
+            }
+        }
         // 初始化游戏
         function initGame() {
-            // 设置Canvas尺寸
             canvas.width = config.canvasWidth;
             canvas.height = config.canvasHeight;
             
             // 计算缩放比例
             calculateCanvasScale();
             
-            // 初始化游戏状态
-            gameState = {
-                score: 0,
-                highScore: localStorage.getItem('bigWatermelonHighScore') || 0,
-                fruits: [],
-                currentFruit: null,
-                nextFruitType: Math.floor(Math.random() * 3),
-                isGameOver: false,
-                isDropping: false,
-                currentPosition: canvas.width / 2,
-                canvasScale: gameState.canvasScale
-            };
+            gameState.score = 0;
+            gameState.fruits = [];
+            gameState.currentFruit = null;
+            gameState.nextFruitType = Math.floor(Math.random() * 3);
+            gameState.isGameOver = false;
+            gameState.isDropping = false;
+            gameState.currentPosition = canvas.width / 2;
             
-            // 更新UI
             updateScore();
             updateNextFruitPreview();
-            gameOverEl.style.display = 'none';
-            positionIndicator.style.display = 'block';
-            dropLine.style.display = 'block';
-            
-            // 创建第一个水果
             createNewFruit();
+            gameOverEl.style.display = 'none';
             
-            // 开始游戏循环
             requestAnimationFrame(gameLoop);
         }
 
-        // 创建新水果
         function createNewFruit() {
             const fruitType = config.fruitTypes[gameState.nextFruitType];
             gameState.currentFruit = {
@@ -380,13 +847,16 @@
                 isDropped: false
             };
             
-            // 生成下一个水果类型
             gameState.nextFruitType = Math.floor(Math.random() * 3);
             updateNextFruitPreview();
-            updatePositionIndicator();
         }
 
-        // 放置水果
+        function updateNextFruitPreview() {
+            const nextFruitType = config.fruitTypes[gameState.nextFruitType];
+            nextFruitPreviewEl.style.background = nextFruitType.color;
+            nextFruitPreviewEl.innerHTML = nextFruitType.emoji;
+        }
+
         function dropFruit() {
             if (gameState.isDropping || gameState.isGameOver || !gameState.currentFruit) return;
             
@@ -394,7 +864,9 @@
             gameState.currentFruit.isDropped = true;
             gameState.fruits.push(gameState.currentFruit);
             
-            // 延迟后创建新水果
+            // 保存游戏状态
+            saveGameState();
+            
             setTimeout(() => {
                 createNewFruit();
                 gameState.isDropping = false;
@@ -402,15 +874,12 @@
             }, 500);
         }
 
-        // 更新水果位置
         function updateFruitPosition(clientX) {
             if (gameState.isDropping || gameState.isGameOver) return;
             
             const rect = gameArea.getBoundingClientRect();
-            // 计算在Canvas坐标系中的准确位置
             const canvasX = (clientX - rect.left) * gameState.canvasScale;
             
-            // 限制在画布范围内
             const fruitRadius = gameState.currentFruit ? gameState.currentFruit.radius : 25;
             const minX = fruitRadius;
             const maxX = canvas.width - fruitRadius;
@@ -420,89 +889,44 @@
             if (gameState.currentFruit) {
                 gameState.currentFruit.x = gameState.currentPosition;
             }
-            
-            // 更新位置指示器
-            updatePositionIndicator();
         }
 
-        // 更新位置指示器
-        function updatePositionIndicator() {
-            // 将Canvas坐标转换回屏幕坐标
-            const screenX = gameState.currentPosition / gameState.canvasScale;
-            positionIndicator.style.left = screenX + 'px';
-            
-            // 更新掉落线
-            if (gameState.currentFruit) {
-                const screenY = (gameState.currentFruit.y + gameState.currentFruit.radius) / gameState.canvasScale;
-                dropLine.style.top = screenY + 'px';
-            }
-        }
-
-        // 游戏主循环
         function gameLoop() {
-            // 清空画布
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // 绘制背景
             drawBackground();
-            
-            // 更新和绘制水果
             updateFruits();
             drawFruits();
             
-            // 绘制当前控制的水果和引导线
             if (gameState.currentFruit && !gameState.currentFruit.isDropped) {
                 drawFruit(gameState.currentFruit);
-                drawGuideLine();
             }
             
-            // 继续游戏循环
             if (!gameState.isGameOver) {
                 requestAnimationFrame(gameLoop);
             }
         }
 
-        // 绘制引导线
-        function drawGuideLine() {
-            if (!gameState.currentFruit) return;
-            
-            ctx.beginPath();
-            ctx.moveTo(gameState.currentFruit.x, gameState.currentFruit.y + gameState.currentFruit.radius);
-            ctx.lineTo(gameState.currentFruit.x, canvas.height - 20);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([5, 5]);
-            ctx.stroke();
-            ctx.setLineDash([]);
-        }
-
-        // 绘制背景
         function drawBackground() {
-            // 渐变背景
             const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
             gradient.addColorStop(0, '#1a2a6c');
             gradient.addColorStop(1, '#b21f1f');
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // 绘制底部地面
             ctx.fillStyle = 'rgba(139, 69, 19, 0.7)';
             ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
         }
 
-        // 更新水果位置和物理效果
         function updateFruits() {
             for (let i = 0; i < gameState.fruits.length; i++) {
                 const fruit = gameState.fruits[i];
                 
-                // 应用重力
+                // 应用物理效果
                 fruit.vy += config.gravity;
-                
-                // 更新位置
                 fruit.x += fruit.vx;
                 fruit.y += fruit.vy;
                 
-                // 边界碰撞检测
+                // 边界碰撞
                 if (fruit.x - fruit.radius < 0) {
                     fruit.x = fruit.radius;
                     fruit.vx *= -config.restitution;
@@ -511,52 +935,47 @@
                     fruit.vx *= -config.restitution;
                 }
                 
+                // 地面碰撞
                 if (fruit.y + fruit.radius > canvas.height - 20) {
                     fruit.y = canvas.height - 20 - fruit.radius;
                     fruit.vy *= -config.restitution;
                     fruit.vx *= config.friction;
                     
-                    // 如果速度很小，停止运动
-                    if (Math.abs(fruit.vy) < 0.5) {
-                        fruit.vy = 0;
-                    }
-                    if (Math.abs(fruit.vx) < 0.1) {
-                        fruit.vx = 0;
-                    }
+                    // 停止微小运动
+                    if (Math.abs(fruit.vy) < 0.5) fruit.vy = 0;
+                    if (Math.abs(fruit.vx) < 0.1) fruit.vx = 0;
                 }
                 
-                // 水果之间的碰撞检测
+                // 水果间碰撞检测
                 for (let j = i + 1; j < gameState.fruits.length; j++) {
-                    const otherFruit = gameState.fruits[j];
-                    checkCollision(fruit, otherFruit);
+                    checkCollision(fruit, gameState.fruits[j]);
                 }
             }
         }
 
-        // 绘制所有水果
         function drawFruits() {
-            gameState.fruits.forEach(fruit => {
-                drawFruit(fruit);
-            });
+            gameState.fruits.forEach(fruit => drawFruit(fruit));
         }
 
-        // 绘制单个水果
         function drawFruit(fruit) {
             const fruitType = config.fruitTypes[fruit.type];
             
-            // 水果主体
+            // 绘制水果主体
             ctx.beginPath();
             ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
             ctx.fillStyle = fruitType.color;
             ctx.fill();
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
             
-            // 水果高光
+            // 绘制高光
             ctx.beginPath();
-            ctx.arc(fruit.x - fruit.radius * 0.3, fruit.y - fruit.radius * 0.3, fruit.radius * 0.3, 0, Math.PI * 2);
+            ctx.arc(fruit.x - fruit.radius * 0.2, fruit.y - fruit.radius * 0.2, fruit.radius * 0.3, 0, Math.PI * 2);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
             ctx.fill();
             
-            // 水果表情
+            // 绘制表情
             ctx.font = `${fruit.radius * 0.8}px Arial`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -564,7 +983,6 @@
             ctx.fillText(fruitType.emoji, fruit.x, fruit.y);
         }
 
-        // 碰撞检测
         function checkCollision(fruit1, fruit2) {
             const dx = fruit1.x - fruit2.x;
             const dy = fruit1.y - fruit2.y;
@@ -601,11 +1019,10 @@
                 
                 // 检查是否可以合成
                 if (fruit1.type === fruit2.type && fruit1.type < config.fruitTypes.length - 1) {
-                    // 找到两个水果的索引
                     const index1 = gameState.fruits.indexOf(fruit1);
                     const index2 = gameState.fruits.indexOf(fruit2);
                     
-                    if (index1 > -1 && index2 > -1) {
+                    if (index1 > -1 && index2 > -1 && index1 !== index2) {
                         // 移除这两个水果
                         gameState.fruits.splice(Math.max(index1, index2), 1);
                         gameState.fruits.splice(Math.min(index1, index2), 1);
@@ -618,111 +1035,210 @@
                             y: (fruit1.y + fruit2.y) / 2,
                             radius: config.fruitTypes[newFruitType].radius,
                             color: config.fruitTypes[newFruitType].color,
-                            vx: (fruit1.vx + fruit2.vx) * 0.5,
-                            vy: (fruit1.vy + fruit2.vy) * 0.5,
+                            vx: (fruit1.vx + fruit2.vx) * 0.3,
+                            vy: (fruit1.vy + fruit2.vy) * 0.3 - 2,
                             isDropped: true
                         };
                         
                         gameState.fruits.push(newFruit);
-                        
-                        // 更新分数
                         gameState.score += config.fruitTypes[newFruitType].score * 10;
                         updateScore();
+                        
+                        // 保存游戏状态
+                        saveGameState();
                     }
                 }
             }
         }
 
-        // 更新分数显示
         function updateScore() {
             currentScoreEl.textContent = gameState.score;
-            highScoreEl.textContent = gameState.highScore;
+            if (gameState.score > gameState.highScore) {
+                gameState.highScore = gameState.score;
+                highScoreEl.textContent = gameState.highScore;
+            }
         }
 
-        // 更新下一个水果预览
-        function updateNextFruitPreview() {
-            const nextFruitType = config.fruitTypes[gameState.nextFruitType];
-            nextFruitPreviewEl.style.background = nextFruitType.color;
-            nextFruitPreviewEl.innerHTML = nextFruitType.emoji;
-        }
-
-        // 检查游戏是否结束
         function checkGameOver() {
-            // 如果有水果超过一定高度，游戏结束
             for (let fruit of gameState.fruits) {
-                if (fruit.y - fruit.radius < 100) {
+                if (fruit.y - fruit.radius < 100&&Math.abs(fruit.vx) < 0.5 && Math.abs(fruit.vy) < 0.5) {
                     endGame();
                     return;
                 }
             }
         }
 
-        // 结束游戏
         function endGame() {
             gameState.isGameOver = true;
             finalScoreEl.textContent = gameState.score;
-            
-            // 更新最高分
-            if (gameState.score > gameState.highScore) {
-                gameState.highScore = gameState.score;
-                localStorage.setItem('bigWatermelonHighScore', gameState.highScore);
-                highScoreEl.textContent = gameState.highScore;
-            }
-            
             gameOverEl.style.display = 'flex';
-            positionIndicator.style.display = 'none';
-            dropLine.style.display = 'none';
+            
+            // 保存最终分数
+            saveScore(gameState.score);
+            // 保存游戏结束状态
+            saveGameState();
+            
+            // 如果排行榜弹窗是打开的，刷新排行榜数据
+            if (leaderboardModal.style.display === 'flex') {
+                loadLeaderboard();
+            }
         }
 
-        // 重新开始游戏
         function restartGame() {
             initGame();
+            // 保存重新开始的状态
+            saveGameState();
         }
 
-        // 事件监听 - 鼠标控制
+        // 显示排行榜弹窗
+        function showLeaderboard() {
+            loadLeaderboard();
+            leaderboardModal.style.display = 'flex';
+        }
+
+        // 隐藏排行榜弹窗
+        function hideLeaderboard() {
+            leaderboardModal.style.display = 'none';
+        }
+
+        // API 功能
+        async function saveGameState() {
+            if (!gameState.sessionId) return;
+            
+            try {
+                const fruitsData = gameState.fruits.map(f => 
+                    `${f.type}#${f.x}#${f.y}#${f.vx}#${f.vy}#${f.radius}#${f.isDropped}`
+                ).join(';');
+
+          console.log('🔍 发送到后端的数据:', {
+            sessionId: gameState.sessionId,
+            currentScore: gameState.score,
+            nextFruitType: gameState.nextFruitType,
+            isGameOver: gameState.isGameOver,
+            fruits: fruitsData,
+            fruitsCount: gameState.fruits.length
+        });
+
+                await fetch(`${apiBase}/updateGame`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sessionId: gameState.sessionId,
+                        currentScore: gameState.score,
+                        nextFruitType: gameState.nextFruitType,
+                        isGameOver: gameState.isGameOver,
+                        fruits: fruitsData
+                    })
+                });
+            } catch (error) {
+                console.error('保存游戏状态失败:', error);
+            }
+        }
+
+        async function saveScore(score) {
+            if (!gameState.sessionId) return;
+            
+            try {
+                const response = await fetch(`${apiBase}/saveScore`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sessionId: gameState.sessionId,
+                        score: score
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    gameState.highScore = parseInt(result.highScore);
+                    highScoreEl.textContent = gameState.highScore;
+                    if (result.isNewHighScore === 'true') {
+                        loadLeaderboard();
+                    }
+                }
+            } catch (error) {
+                console.error('保存分数失败:', error);
+            }
+        }
+
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`${apiBase}/leaderboard`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    leaderboardList.innerHTML = '';
+                    result.leaderboard.forEach((entry, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'leaderboard-item';
+                        item.innerHTML = `
+                            <span>${index + 1}. ${entry.username}</span>
+                            <span>${entry.score}</span>
+                        `;
+                        leaderboardList.appendChild(item);
+                    });
+                    
+                    if (result.leaderboard.length === 0) {
+                        leaderboardList.innerHTML = '<div class="leaderboard-item"><span>暂无数据</span><span>-</span></div>';
+                    }
+                }
+            } catch (error) {
+                console.error('加载排行榜失败:', error);
+                leaderboardList.innerHTML = '<div class="leaderboard-item"><span>加载失败</span><span>-</span></div>';
+            }
+        }
+
+        // 事件监听
         gameArea.addEventListener('mousemove', (e) => {
             updateFruitPosition(e.clientX);
         });
 
-        gameArea.addEventListener('click', (e) => {
+        gameArea.addEventListener('click', () => {
             if (!gameState.isDropping && !gameState.isGameOver) {
                 dropFruit();
             }
         });
 
-        // 事件监听 - 触摸控制
-        gameArea.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            updateFruitPosition(e.touches[0].clientX);
-        }, { passive: false });
-
-        gameArea.addEventListener('touchend', (e) => {
-            if (!gameState.isDropping && !gameState.isGameOver) {
-                dropFruit();
-            }
-        });
-
-        // 按钮事件
-        dropBtn.addEventListener('click', dropFruit);
-        restartBtn.addEventListener('click', restartGame);
-
-        // 键盘控制
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
                 dropFruit();
                 e.preventDefault();
-            } else if (e.code === 'ArrowLeft') {
-                updateFruitPosition((gameState.currentPosition / gameState.canvasScale) - 10);
-            } else if (e.code === 'ArrowRight') {
-                updateFruitPosition((gameState.currentPosition / gameState.canvasScale) + 10);
+            }
+        });
+
+        // 点击弹窗外部关闭
+        leaderboardModal.addEventListener('click', (e) => {
+            if (e.target === leaderboardModal) {
+                hideLeaderboard();
+            }
+        });
+
+        // 按ESC键关闭弹窗
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Escape' && leaderboardModal.style.display === 'flex') {
+                hideLeaderboard();
             }
         });
 
         // 窗口大小变化时重新计算缩放比例
         window.addEventListener('resize', calculateCanvasScale);
 
-        // 初始化游戏
-        initGame();
+        // 全局函数
+        function showRegister() {
+            window.loginApp.showRegister();
+        }
+
+        function showLogin() {
+            window.loginApp.showLogin();
+        }
+
+        function handleLogout() {
+            window.loginApp.handleLogout();
+        }
+      // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            window.loginApp = new LoginApp();
+        });
     </script>
 </body>
 </html>
